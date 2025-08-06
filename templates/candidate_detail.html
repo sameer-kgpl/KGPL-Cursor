@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block title %}{{ candidate.name }} - Candidate Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('recruiter_dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('search_candidates') }}">Search Candidates</a></li>
+                    <li class="breadcrumb-item active">{{ candidate.name }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Candidate Profile -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar-lg bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px;">
+                            {{ candidate.name[0].upper() }}
+                        </div>
+                        <div>
+                            <h4 class="mb-1">{{ candidate.name }}</h4>
+                            <p class="text-muted mb-0">{{ candidate.current_role or 'Job Seeker' }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Contact Information -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-envelope text-primary"></i> Contact Information</h6>
+                            <ul class="list-unstyled">
+                                <li><strong>Email:</strong> {{ candidate.email }}</li>
+                                {% if candidate.phone %}
+                                    <li><strong>Phone:</strong> {{ candidate.phone }}</li>
+                                {% endif %}
+                                {% if candidate.location %}
+                                    <li><strong>Location:</strong> {{ candidate.location }}</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-briefcase text-primary"></i> Professional Details</h6>
+                            <ul class="list-unstyled">
+                                <li><strong>Experience:</strong> {{ candidate.experience_years }} years</li>
+                                {% if candidate.current_company %}
+                                    <li><strong>Current Company:</strong> {{ candidate.current_company }}</li>
+                                {% endif %}
+                                {% if candidate.expected_salary %}
+                                    <li><strong>Expected Salary:</strong> {{ candidate.expected_salary }}</li>
+                                {% endif %}
+                                {% if candidate.notice_period %}
+                                    <li><strong>Notice Period:</strong> {{ candidate.notice_period }}</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Skills -->
+                    {% if skills %}
+                    <div class="mb-4">
+                        <h6><i class="fas fa-cogs text-primary"></i> Skills</h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for skill in skills %}
+                                <span class="badge bg-primary">{{ skill }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Education -->
+                    {% if candidate.education %}
+                    <div class="mb-4">
+                        <h6><i class="fas fa-graduation-cap text-primary"></i> Education</h6>
+                        <p>{{ candidate.education }}</p>
+                    </div>
+                    {% endif %}
+
+                    <!-- Summary -->
+                    {% if candidate.summary %}
+                    <div class="mb-4">
+                        <h6><i class="fas fa-user text-primary"></i> Summary</h6>
+                        <p>{{ candidate.summary }}</p>
+                    </div>
+                    {% endif %}
+
+                    <!-- Profile Dates -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <small class="text-muted">
+                                <i class="fas fa-calendar-plus"></i>
+                                Profile Created: {{ candidate.created_at.strftime('%d %B %Y') }}
+                            </small>
+                        </div>
+                        <div class="col-md-6">
+                            <small class="text-muted">
+                                <i class="fas fa-calendar-check"></i>
+                                Last Updated: {{ candidate.updated_at.strftime('%d %B %Y') }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Quick Actions -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-bolt"></i> Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="mailto:{{ candidate.email }}" class="btn btn-primary">
+                            <i class="fas fa-envelope"></i> Send Email
+                        </a>
+                        {% if candidate.phone %}
+                        <a href="tel:{{ candidate.phone }}" class="btn btn-outline-primary">
+                            <i class="fas fa-phone"></i> Call Now
+                        </a>
+                        {% endif %}
+                        <button class="btn btn-outline-success" onclick="downloadProfile()">
+                            <i class="fas fa-download"></i> Download Profile
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Stats -->
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-chart-bar"></i> Profile Stats</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <div class="border-end">
+                                <h4 class="text-primary mb-1">{{ candidate.experience_years }}</h4>
+                                <small class="text-muted">Years Exp.</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <h4 class="text-success mb-1">{{ skills|length if skills else 0 }}</h4>
+                            <small class="text-muted">Skills</small>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">Profile Completeness</small>
+                        <small class="text-muted">
+                            {% set completeness = 0 %}
+                            {% if candidate.name %}{% set completeness = completeness + 1 %}{% endif %}
+                            {% if candidate.email %}{% set completeness = completeness + 1 %}{% endif %}
+                            {% if candidate.phone %}{% set completeness = completeness + 1 %}{% endif %}
+                            {% if candidate.location %}{% set completeness = completeness + 1 %}{% endif %}
+                            {% if candidate.current_role %}{% set completeness = completeness + 1 %}{% endif %}
+                            {% if candidate.current_company %}{% set completeness = completeness + 1 %}{% endif %}
+                            {% if candidate.skills %}{% set completeness = completeness + 1 %}{% endif %}
+                            {% if candidate.education %}{% set completeness = completeness + 1 %}{% endif %}
+                            {% if candidate.summary %}{% set completeness = completeness + 1 %}{% endif %}
+                            {{ (completeness * 100 / 9)|round|int }}%
+                        </small>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar" style="width: {{ (completeness * 100 / 9)|round|int }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function downloadProfile() {
+    // Create a simple text version of the profile for download
+    const profileData = `
+CANDIDATE PROFILE
+=================
+
+Name: {{ candidate.name }}
+Email: {{ candidate.email }}
+Phone: {{ candidate.phone or 'Not provided' }}
+Location: {{ candidate.location or 'Not provided' }}
+
+PROFESSIONAL DETAILS
+===================
+Current Role: {{ candidate.current_role or 'Not provided' }}
+Current Company: {{ candidate.current_company or 'Not provided' }}
+Experience: {{ candidate.experience_years }} years
+Expected Salary: {{ candidate.expected_salary or 'Not provided' }}
+Notice Period: {{ candidate.notice_period or 'Not provided' }}
+
+SKILLS
+======
+{% if skills %}{% for skill in skills %}{{ skill }}{% if not loop.last %}, {% endif %}{% endfor %}{% else %}Not provided{% endif %}
+
+EDUCATION
+=========
+{{ candidate.education or 'Not provided' }}
+
+SUMMARY
+=======
+{{ candidate.summary or 'Not provided' }}
+
+Profile Created: {{ candidate.created_at.strftime('%d %B %Y') }}
+Last Updated: {{ candidate.updated_at.strftime('%d %B %Y') }}
+    `.trim();
+
+    const blob = new Blob([profileData], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '{{ candidate.name|replace(" ", "_") }}_profile.txt';
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+}
+</script>
+{% endblock %}

@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}Bulk Upload - Recruitment Portal{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2><i class="fas fa-upload"></i> Bulk Upload Candidates</h2>
+            <p class="text-muted">Upload candidate data in bulk using Excel (.xlsx) or CSV files.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Upload Form -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-file-upload"></i> Upload File</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="mb-4">
+                            <label for="file" class="form-label">Select File</label>
+                            <input type="file" class="form-control" id="file" name="file" accept=".xlsx,.csv" required>
+                            <div class="form-text">
+                                Supported formats: Excel (.xlsx) and CSV (.csv). Maximum file size: 16MB
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Important:</strong> Make sure your file follows the template format. 
+                            Download the template below to see the required column structure.
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-upload"></i> Upload Candidates
+                            </button>
+                            <a href="{{ url_for('download_template') }}" class="btn btn-outline-success">
+                                <i class="fas fa-download"></i> Download Template
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Instructions -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-question-circle"></i> Instructions</h5>
+                </div>
+                <div class="card-body">
+                    <h6>Required Columns:</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success"></i> <strong>name</strong> - Full name</li>
+                        <li><i class="fas fa-check text-success"></i> <strong>email</strong> - Email address</li>
+                        <li><i class="fas fa-check text-success"></i> <strong>phone</strong> - Phone number</li>
+                        <li><i class="fas fa-check text-success"></i> <strong>location</strong> - City, State</li>
+                        <li><i class="fas fa-check text-success"></i> <strong>experience_years</strong> - Years of experience</li>
+                        <li><i class="fas fa-check text-success"></i> <strong>current_role</strong> - Current job title</li>
+                        <li><i class="fas fa-check text-success"></i> <strong>current_company</strong> - Current employer</li>
+                        <li><i class="fas fa-check text-success"></i> <strong>skills</strong> - Comma-separated skills</li>
+                        <li><i class="fas fa-check text-success"></i> <strong>education</strong> - Educational background</li>
+                        <li><i class="fas fa-check text-success"></i> <strong>expected_salary</strong> - Salary expectations</li>
+                        <li><i class="fas fa-check text-success"></i> <strong>notice_period</strong> - Notice period</li>
+                        <li><i class="fas fa-check text-success"></i> <strong>summary</strong> - Brief summary</li>
+                    </ul>
+                    
+                    <hr>
+                    
+                    <h6>Tips:</h6>
+                    <ul class="small">
+                        <li>Use the template for best results</li>
+                        <li>Separate skills with commas</li>
+                        <li>Duplicate emails will be skipped</li>
+                        <li>Empty rows will be ignored</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sample Data Preview -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-table"></i> Sample Data Format</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>name</th>
+                                    <th>email</th>
+                                    <th>phone</th>
+                                    <th>location</th>
+                                    <th>experience_years</th>
+                                    <th>current_role</th>
+                                    <th>skills</th>
+                                    <th>education</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>John Doe</td>
+                                    <td>john@example.com</td>
+                                    <td>9876543210</td>
+                                    <td>Mumbai</td>
+                                    <td>3</td>
+                                    <td>Software Developer</td>
+                                    <td>Python,Flask,JavaScript</td>
+                                    <td>B.Tech Computer Science</td>
+                                </tr>
+                                <tr>
+                                    <td>Jane Smith</td>
+                                    <td>jane@example.com</td>
+                                    <td>9876543211</td>
+                                    <td>Delhi</td>
+                                    <td>5</td>
+                                    <td>Senior Developer</td>
+                                    <td>React,Node.js,MongoDB</td>
+                                    <td>M.Tech Software Engineering</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-muted small mt-2">
+                        <i class="fas fa-info-circle"></i>
+                        This is just a preview. The actual template includes all required columns.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

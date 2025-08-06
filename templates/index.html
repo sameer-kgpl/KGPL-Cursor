@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Recruitment Portal{% endblock %}
+
+{% block content %}
+<div class="hero-section bg-gradient-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Find the Perfect Talent</h1>
+                <p class="lead mb-4">Our internal recruitment portal helps you discover and connect with the best candidates for your organization.</p>
+                {% if not current_user.is_authenticated %}
+                    <div class="d-flex gap-3">
+                        <a href="{{ url_for('register') }}" class="btn btn-light btn-lg">
+                            <i class="fas fa-user-plus"></i> Get Started
+                        </a>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-6">
+                <img src="https://via.placeholder.com/500x300/4e73df/ffffff?text=Recruitment+Portal" class="img-fluid rounded" alt="Recruitment Portal">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12 text-center mb-5">
+            <h2 class="display-5 fw-bold">Key Features</h2>
+            <p class="text-muted">Everything you need for efficient recruitment</p>
+        </div>
+    </div>
+    
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <i class="fas fa-search fa-lg"></i>
+                    </div>
+                    <h5 class="card-title">Smart Search</h5>
+                    <p class="card-text text-muted">Advanced keyword-based search to find candidates with specific skills, experience, and qualifications.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <i class="fas fa-upload fa-lg"></i>
+                    </div>
+                    <h5 class="card-title">Bulk Upload</h5>
+                    <p class="card-text text-muted">Import candidate data in bulk using Excel or CSV files to quickly build your talent database.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <i class="fas fa-user-edit fa-lg"></i>
+                    </div>
+                    <h5 class="card-title">Profile Management</h5>
+                    <p class="card-text text-muted">Candidates can create and manage their profiles with detailed information and skills.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% if not current_user.is_authenticated %}
+    <div class="row mt-5">
+        <div class="col-12 text-center">
+            <div class="bg-light rounded p-5">
+                <h3 class="mb-3">Ready to get started?</h3>
+                <p class="text-muted mb-4">Join our recruitment portal today and streamline your hiring process.</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{{ url_for('register') }}?user_type=recruiter" class="btn btn-primary btn-lg">
+                        <i class="fas fa-briefcase"></i> Join as Recruiter
+                    </a>
+                    <a href="{{ url_for('register') }}?user_type=candidate" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-user"></i> Join as Candidate
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.hero-section {
+    background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+}
+
+.feature-icon {
+    transition: transform 0.3s ease;
+}
+
+.card:hover .feature-icon {
+    transform: scale(1.1);
+}
+
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+</style>
+{% endblock %}

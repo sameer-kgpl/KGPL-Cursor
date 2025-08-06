@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Profile - Recruitment Portal{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('candidate_profile') }}">My Profile</a></li>
+                    <li class="breadcrumb-item active">Edit Profile</li>
+                </ol>
+            </nav>
+            <h2><i class="fas fa-edit"></i> Edit Profile</h2>
+            <p class="text-muted">Complete your profile to increase visibility to recruiters.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-user-edit"></i> Profile Information</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <!-- Basic Information -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h6 class="text-primary border-bottom pb-2 mb-3">
+                                    <i class="fas fa-user"></i> Basic Information
+                                </h6>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Full Name *</label>
+                                    <input type="text" class="form-control" id="name" name="name" 
+                                           value="{{ candidate.name if candidate else '' }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-control" id="phone" name="phone" 
+                                           value="{{ candidate.phone if candidate else '' }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="location" class="form-label">Location</label>
+                                    <input type="text" class="form-control" id="location" name="location" 
+                                           value="{{ candidate.location if candidate else '' }}" 
+                                           placeholder="City, State, Country">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="experience_years" class="form-label">Years of Experience</label>
+                                    <select class="form-select" id="experience_years" name="experience_years">
+                                        {% for year in range(0, 31) %}
+                                            <option value="{{ year }}" 
+                                                {% if candidate and candidate.experience_years == year %}selected{% endif %}>
+                                                {{ year }} year{{ 's' if year != 1 else '' }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Professional Information -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h6 class="text-primary border-bottom pb-2 mb-3">
+                                    <i class="fas fa-briefcase"></i> Professional Information
+                                </h6>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="current_role" class="form-label">Current Role/Position</label>
+                                    <input type="text" class="form-control" id="current_role" name="current_role" 
+                                           value="{{ candidate.current_role if candidate else '' }}" 
+                                           placeholder="e.g., Software Developer">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="current_company" class="form-label">Current Company</label>
+                                    <input type="text" class="form-control" id="current_company" name="current_company" 
+                                           value="{{ candidate.current_company if candidate else '' }}" 
+                                           placeholder="e.g., Tech Corp">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="expected_salary" class="form-label">Expected Salary</label>
+                                    <input type="text" class="form-control" id="expected_salary" name="expected_salary" 
+                                           value="{{ candidate.expected_salary if candidate else '' }}" 
+                                           placeholder="e.g., 8-12 LPA">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="notice_period" class="form-label">Notice Period</label>
+                                    <select class="form-select" id="notice_period" name="notice_period">
+                                        <option value="">Select Notice Period</option>
+                                        <option value="Immediate" {% if candidate and candidate.notice_period == 'Immediate' %}selected{% endif %}>Immediate</option>
+                                        <option value="15 days" {% if candidate and candidate.notice_period == '15 days' %}selected{% endif %}>15 days</option>
+                                        <option value="30 days" {% if candidate and candidate.notice_period == '30 days' %}selected{% endif %}>30 days</option>
+                                        <option value="45 days" {% if candidate and candidate.notice_period == '45 days' %}selected{% endif %}>45 days</option>
+                                        <option value="60 days" {% if candidate and candidate.notice_period == '60 days' %}selected{% endif %}>60 days</option>
+                                        <option value="90 days" {% if candidate and candidate.notice_period == '90 days' %}selected{% endif %}>90 days</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Skills and Education -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h6 class="text-primary border-bottom pb-2 mb-3">
+                                    <i class="fas fa-cogs"></i> Skills & Education
+                                </h6>
+                            </div>
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label for="skills" class="form-label">Skills</label>
+                                    <input type="text" class="form-control" id="skills" name="skills" 
+                                           value="{{ skills_str }}" 
+                                           placeholder="e.g., Python, JavaScript, React, Node.js (comma separated)">
+                                    <div class="form-text">
+                                        Enter your skills separated by commas. This helps recruiters find you based on your expertise.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label for="education" class="form-label">Education</label>
+                                    <input type="text" class="form-control" id="education" name="education" 
+                                           value="{{ candidate.education if candidate else '' }}" 
+                                           placeholder="e.g., B.Tech Computer Science, XYZ University">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Summary -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h6 class="text-primary border-bottom pb-2 mb-3">
+                                    <i class="fas fa-file-alt"></i> Professional Summary
+                                </h6>
+                            </div>
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label for="summary" class="form-label">Professional Summary</label>
+                                    <textarea class="form-control" id="summary" name="summary" rows="4" 
+                                              placeholder="Write a brief summary of your professional experience, achievements, and career goals...">{{ candidate.summary if candidate else '' }}</textarea>
+                                    <div class="form-text">
+                                        A compelling summary helps recruiters understand your background and career aspirations quickly.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Save Profile
+                                    </button>
+                                    <a href="{{ url_for('candidate_profile') }}" class="btn btn-outline-secondary">
+                                        <i class="fas fa-times"></i> Cancel
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar with Tips -->
+        <div class="col-lg-4">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-lightbulb"></i> Profile Tips</h6>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info p-3">
+                        <h6 class="alert-heading">Make Your Profile Stand Out!</h6>
+                        <ul class="mb-0 small">
+                            <li>Use a professional summary to highlight your key strengths</li>
+                            <li>List relevant skills that match your target roles</li>
+                            <li>Keep your information current and accurate</li>
+                            <li>Be specific about your experience and achievements</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-question-circle"></i> Need Help?</h6>
+                </div>
+                <div class="card-body">
+                    <p class="small text-muted">
+                        Having trouble completing your profile? Here are some guidelines:
+                    </p>
+                    <ul class="small">
+                        <li><strong>Skills:</strong> Include both technical and soft skills</li>
+                        <li><strong>Summary:</strong> 2-3 sentences about your expertise</li>
+                        <li><strong>Experience:</strong> Be honest about your years of experience</li>
+                        <li><strong>Contact:</strong> Ensure your phone and email are correct</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Add some interactivity to the skills input
+document.getElementById('skills').addEventListener('input', function(e) {
+    const skills = e.target.value.split(',').map(s => s.trim()).filter(s => s);
+    const preview = document.getElementById('skills-preview');
+    if (preview) {
+        preview.innerHTML = skills.map(skill => `<span class="badge bg-primary me-1">${skill}</span>`).join('');
+    }
+});
+</script>
+{% endblock %}

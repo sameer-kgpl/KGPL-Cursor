@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  recruitment-portal:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=your-production-secret-key-here
+    volumes:
+      - ./uploads:/app/uploads
+      - ./recruitment_portal.db:/app/recruitment_portal.db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Add PostgreSQL database
+  # postgres:
+  #   image: postgres:13
+  #   environment:
+  #     POSTGRES_DB: recruitment_portal
+  #     POSTGRES_USER: recruitment
+  #     POSTGRES_PASSWORD: your-password-here
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"
+  #   restart: unless-stopped
+
+  # Optional: Add Redis for caching
+  # redis:
+  #   image: redis:6-alpine
+  #   ports:
+  #     - "6379:6379"
+  #   restart: unless-stopped
+
+# volumes:
+#   postgres_data:

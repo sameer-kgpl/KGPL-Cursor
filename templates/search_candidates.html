@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}Search Candidates - Recruitment Portal{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2><i class="fas fa-search"></i> Search Candidates</h2>
+        </div>
+    </div>
+
+    <!-- Search Filters -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <form method="GET">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="q" class="form-label">Keywords</label>
+                                    <input type="text" class="form-control" id="q" name="q" value="{{ query }}" placeholder="Skills, role, company, education...">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="location" class="form-label">Location</label>
+                                    <input type="text" class="form-control" id="location" name="location" value="{{ location }}" placeholder="City, state, country...">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="experience" class="form-label">Experience</label>
+                                    <select class="form-select" id="experience" name="experience">
+                                        <option value="">Any Experience</option>
+                                        <option value="0-2" {% if experience == '0-2' %}selected{% endif %}>0-2 years</option>
+                                        <option value="3-5" {% if experience == '3-5' %}selected{% endif %}>3-5 years</option>
+                                        <option value="6-10" {% if experience == '6-10' %}selected{% endif %}>6-10 years</option>
+                                        <option value="10+" {% if experience == '10+' %}selected{% endif %}>10+ years</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="mb-3">
+                                    <label class="form-label">&nbsp;</label>
+                                    <button type="submit" class="btn btn-primary d-block w-100">
+                                        <i class="fas fa-search"></i> Search
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Results -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-users"></i> 
+                        Search Results ({{ candidates|length }} found)
+                    </h5>
+                    {% if query or location or experience %}
+                        <a href="{{ url_for('search_candidates') }}" class="btn btn-sm btn-outline-secondary">
+                            <i class="fas fa-times"></i> Clear Filters
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="card-body p-0">
+                    {% if candidates %}
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Candidate</th>
+                                        <th>Current Role</th>
+                                        <th>Skills</th>
+                                        <th>Experience</th>
+                                        <th>Location</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for candidate in candidates %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px;">
+                                                    {{ candidate.name[0].upper() }}
+                                                </div>
+                                                <div>
+                                                    <strong class="text-primary">{{ candidate.name }}</strong><br>
+                                                    <small class="text-muted">{{ candidate.email }}</small><br>
+                                                    {% if candidate.phone %}
+                                                        <small class="text-muted"><i class="fas fa-phone"></i> {{ candidate.phone }}</small>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="fw-medium">{{ candidate.current_role or 'Not specified' }}</span><br>
+                                            <small class="text-muted">{{ candidate.current_company or 'Not specified' }}</small>
+                                        </td>
+                                        <td>
+                                            {% if candidate.skills %}
+                                                {% set skills = candidate.skills|from_json %}
+                                                {% for skill in skills[:3] %}
+                                                    <span class="badge bg-light text-dark me-1 mb-1">{{ skill }}</span>
+                                                {% endfor %}
+                                                {% if skills|length > 3 %}
+                                                    <span class="badge bg-secondary">+{{ skills|length - 3 }} more</span>
+                                                {% endif %}
+                                            {% else %}
+                                                <small class="text-muted">Not specified</small>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-info">{{ candidate.experience_years }} years</span>
+                                        </td>
+                                        <td>
+                                            <i class="fas fa-map-marker-alt text-muted"></i>
+                                            {{ candidate.location or 'Not specified' }}
+                                        </td>
+                                        <td>
+                                            <a href="{{ url_for('view_candidate', id=candidate.id) }}" class="btn btn-sm btn-primary">
+                                                <i class="fas fa-eye"></i> View Profile
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            {% if query or location or experience %}
+                                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">No candidates found</h5>
+                                <p class="text-muted">Try adjusting your search criteria or clear filters to see all candidates.</p>
+                                <a href="{{ url_for('search_candidates') }}" class="btn btn-outline-primary">
+                                    <i class="fas fa-times"></i> Clear Filters
+                                </a>
+                            {% else %}
+                                <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">No candidates in database</h5>
+                                <p class="text-muted">Start by uploading candidate data to build your talent pool.</p>
+                                <a href="{{ url_for('bulk_upload') }}" class="btn btn-primary">
+                                    <i class="fas fa-upload"></i> Upload Candidates
+                                </a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Filter for JSON skills -->
+{% set from_json = (lambda x: x | from_json if x else []) %}
+{% endblock %}

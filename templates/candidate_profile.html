@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile - Recruitment Portal{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-user"></i> My Profile</h2>
+                <a href="{{ url_for('edit_candidate_profile') }}" class="btn btn-primary">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% if candidate %}
+    <div class="row">
+        <!-- Main Profile -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar-lg bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px;">
+                            {{ candidate.name[0].upper() }}
+                        </div>
+                        <div>
+                            <h4 class="mb-1">{{ candidate.name }}</h4>
+                            <p class="text-muted mb-0">{{ candidate.current_role or 'Job Seeker' }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Contact Information -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-envelope text-primary"></i> Contact Information</h6>
+                            <ul class="list-unstyled">
+                                <li><strong>Email:</strong> {{ candidate.email }}</li>
+                                {% if candidate.phone %}
+                                    <li><strong>Phone:</strong> {{ candidate.phone }}</li>
+                                {% else %}
+                                    <li><strong>Phone:</strong> <span class="text-muted">Not provided</span></li>
+                                {% endif %}
+                                {% if candidate.location %}
+                                    <li><strong>Location:</strong> {{ candidate.location }}</li>
+                                {% else %}
+                                    <li><strong>Location:</strong> <span class="text-muted">Not provided</span></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-briefcase text-primary"></i> Professional Details</h6>
+                            <ul class="list-unstyled">
+                                <li><strong>Experience:</strong> {{ candidate.experience_years }} years</li>
+                                {% if candidate.current_company %}
+                                    <li><strong>Current Company:</strong> {{ candidate.current_company }}</li>
+                                {% else %}
+                                    <li><strong>Current Company:</strong> <span class="text-muted">Not provided</span></li>
+                                {% endif %}
+                                {% if candidate.expected_salary %}
+                                    <li><strong>Expected Salary:</strong> {{ candidate.expected_salary }}</li>
+                                {% else %}
+                                    <li><strong>Expected Salary:</strong> <span class="text-muted">Not provided</span></li>
+                                {% endif %}
+                                {% if candidate.notice_period %}
+                                    <li><strong>Notice Period:</strong> {{ candidate.notice_period }}</li>
+                                {% else %}
+                                    <li><strong>Notice Period:</strong> <span class="text-muted">Not provided</span></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Skills -->
+                    <div class="mb-4">
+                        <h6><i class="fas fa-cogs text-primary"></i> Skills</h6>
+                        {% if skills %}
+                            <div class="d-flex flex-wrap gap-2">
+                                {% for skill in skills %}
+                                    <span class="badge bg-primary">{{ skill }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="text-muted">No skills added yet. <a href="{{ url_for('edit_candidate_profile') }}">Add skills</a> to make your profile more attractive.</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Education -->
+                    <div class="mb-4">
+                        <h6><i class="fas fa-graduation-cap text-primary"></i> Education</h6>
+                        {% if candidate.education %}
+                            <p>{{ candidate.education }}</p>
+                        {% else %}
+                            <p class="text-muted">No education information provided. <a href="{{ url_for('edit_candidate_profile') }}">Add education details</a>.</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Summary -->
+                    <div class="mb-4">
+                        <h6><i class="fas fa-user text-primary"></i> Professional Summary</h6>
+                        {% if candidate.summary %}
+                            <p>{{ candidate.summary }}</p>
+                        {% else %}
+                            <p class="text-muted">No professional summary provided. <a href="{{ url_for('edit_candidate_profile') }}">Add a summary</a> to highlight your experience and goals.</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Profile Dates -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <small class="text-muted">
+                                <i class="fas fa-calendar-plus"></i>
+                                Profile Created: {{ candidate.created_at.strftime('%d %B %Y') }}
+                            </small>
+                        </div>
+                        <div class="col-md-6">
+                            <small class="text-muted">
+                                <i class="fas fa-calendar-check"></i>
+                                Last Updated: {{ candidate.updated_at.strftime('%d %B %Y') }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Profile Completeness -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-chart-pie"></i> Profile Completeness</h6>
+                </div>
+                <div class="card-body">
+                    {% set completeness = 0 %}
+                    {% if candidate.name %}{% set completeness = completeness + 1 %}{% endif %}
+                    {% if candidate.email %}{% set completeness = completeness + 1 %}{% endif %}
+                    {% if candidate.phone %}{% set completeness = completeness + 1 %}{% endif %}
+                    {% if candidate.location %}{% set completeness = completeness + 1 %}{% endif %}
+                    {% if candidate.current_role %}{% set completeness = completeness + 1 %}{% endif %}
+                    {% if candidate.current_company %}{% set completeness = completeness + 1 %}{% endif %}
+                    {% if candidate.skills %}{% set completeness = completeness + 1 %}{% endif %}
+                    {% if candidate.education %}{% set completeness = completeness + 1 %}{% endif %}
+                    {% if candidate.summary %}{% set completeness = completeness + 1 %}{% endif %}
+                    
+                    <div class="text-center mb-3">
+                        <h3 class="text-primary">{{ (completeness * 100 / 9)|round|int }}%</h3>
+                        <small class="text-muted">Complete</small>
+                    </div>
+                    
+                    <div class="progress mb-3" style="height: 10px;">
+                        <div class="progress-bar" style="width: {{ (completeness * 100 / 9)|round|int }}%"></div>
+                    </div>
+                    
+                    {% if completeness < 9 %}
+                    <div class="alert alert-info p-2">
+                        <small>
+                            <i class="fas fa-lightbulb"></i>
+                            Complete your profile to increase visibility to recruiters!
+                        </small>
+                    </div>
+                    {% endif %}
+                    
+                    <a href="{{ url_for('edit_candidate_profile') }}" class="btn btn-outline-primary btn-sm w-100">
+                        <i class="fas fa-edit"></i> Complete Profile
+                    </a>
+                </div>
+            </div>
+
+            <!-- Profile Stats -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-chart-bar"></i> Profile Stats</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <div class="border-end">
+                                <h4 class="text-primary mb-1">{{ candidate.experience_years }}</h4>
+                                <small class="text-muted">Years Exp.</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <h4 class="text-success mb-1">{{ skills|length if skills else 0 }}</h4>
+                            <small class="text-muted">Skills</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tips Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-lightbulb"></i> Profile Tips</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Add a professional summary</li>
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> List your key skills</li>
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Include education details</li>
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Keep information updated</li>
+                        <li class="mb-0"><i class="fas fa-check text-success"></i> Be specific about experience</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% else %}
+    <!-- No Profile Created -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-user-plus fa-4x text-muted mb-4"></i>
+                    <h4>Complete Your Profile</h4>
+                    <p class="text-muted mb-4">You haven't created your candidate profile yet. Complete your profile to be visible to recruiters.</p>
+                    <a href="{{ url_for('edit_candidate_profile') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-edit"></i> Create Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
