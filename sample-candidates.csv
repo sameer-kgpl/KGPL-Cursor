@@ -1,0 +1,9 @@
+name,email,phone,location,experience_years,skills,education,current_company,expected_salary
+John Doe,john.doe@example.com,+1234567890,New York,5,JavaScript,React,Node.js,BS Computer Science,Tech Corp,80000
+Jane Smith,jane.smith@example.com,+1234567891,San Francisco,3,Python,Django,Data Analysis,MS Data Science,Startup Inc,90000
+Mike Johnson,mike.johnson@example.com,+1234567892,Chicago,7,Java,Spring Boot,Microservices,BS Software Engineering,Enterprise Solutions,95000
+Sarah Wilson,sarah.wilson@example.com,+1234567893,Austin,4,React,TypeScript,UI/UX,BS Design,Creative Agency,85000
+David Brown,david.brown@example.com,+1234567894,Seattle,6,Python,Machine Learning,Data Science,MS Computer Science,AI Research,100000
+Lisa Davis,lisa.davis@example.com,+1234567895,Boston,2,JavaScript,Vue.js,Frontend Development,BS Web Development,Digital Agency,70000
+Robert Miller,robert.miller@example.com,+1234567896,Denver,8,C#,ASP.NET,Backend Development,BS Information Technology,Software Company,110000
+Emily Garcia,emily.garcia@example.com,+1234567897,Miami,3,Python,Flask,Web Development,BS Computer Science,Startup,75000

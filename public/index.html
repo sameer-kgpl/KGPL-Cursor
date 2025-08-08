@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recruitment Portal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Login/Register Section -->
+        <div id="auth-section" class="auth-container">
+            <div class="auth-box">
+                <h1><i class="fas fa-users"></i> Recruitment Portal</h1>
+                
+                <div class="auth-tabs">
+                    <button class="tab-btn active" onclick="showTab('login')">Login</button>
+                    <button class="tab-btn" onclick="showTab('register')">Register</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="login-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+
+                <!-- Register Form -->
+                <form id="register-form" class="auth-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="register-name">Full Name</label>
+                        <input type="text" id="register-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email</label>
+                        <input type="email" id="register-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Main Application Section -->
+        <div id="main-section" style="display: none;">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-content">
+                    <h1><i class="fas fa-users"></i> Recruitment Portal</h1>
+                    <div class="user-info">
+                        <span id="user-name"></span>
+                        <span id="user-role" class="role-badge"></span>
+                        <button onclick="logout()" class="btn btn-outline">Logout</button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Navigation -->
+            <nav class="nav-tabs">
+                <button class="nav-btn active" onclick="showSection('dashboard')" data-section="dashboard">
+                    <i class="fas fa-home"></i> Dashboard
+                </button>
+                <button class="nav-btn" onclick="showSection('profile')" data-section="profile" id="profile-nav" style="display: none;">
+                    <i class="fas fa-user"></i> My Profile
+                </button>
+                <button class="nav-btn" onclick="showSection('search')" data-section="search" id="search-nav" style="display: none;">
+                    <i class="fas fa-search"></i> Search Candidates
+                </button>
+                <button class="nav-btn" onclick="showSection('bulk-upload')" data-section="bulk-upload" id="upload-nav" style="display: none;">
+                    <i class="fas fa-upload"></i> Bulk Upload
+                </button>
+                <button class="nav-btn" onclick="showSection('users')" data-section="users" id="users-nav" style="display: none;">
+                    <i class="fas fa-users-cog"></i> Manage Users
+                </button>
+            </nav>
+
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="section active">
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h3>Welcome!</h3>
+                        <p>Use the navigation above to access different features based on your role.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Section (Candidates) -->
+            <div id="profile" class="section">
+                <div class="section-header">
+                    <h2>My Profile</h2>
+                    <p>Update your professional information and upload your resume</p>
+                </div>
+                <form id="profile-form" class="form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <input type="text" id="location">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="experience">Years of Experience</label>
+                            <input type="number" id="experience" min="0" max="50">
+                        </div>
+                        <div class="form-group">
+                            <label for="current-company">Current Company</label>
+                            <input type="text" id="current-company">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="skills">Skills (comma separated)</label>
+                        <input type="text" id="skills" placeholder="JavaScript, React, Node.js">
+                    </div>
+                    <div class="form-group">
+                        <label for="education">Education</label>
+                        <textarea id="education" rows="3"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="expected-salary">Expected Salary (USD)</label>
+                            <input type="number" id="expected-salary" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="resume">Resume (PDF/DOC)</label>
+                            <input type="file" id="resume" accept=".pdf,.doc,.docx">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </form>
+            </div>
+
+            <!-- Search Section (Recruiters/Admins) -->
+            <div id="search" class="section">
+                <div class="section-header">
+                    <h2>Search Candidates</h2>
+                    <p>Find potential candidates using keywords and filters</p>
+                </div>
+                <div class="search-filters">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="search-keyword">Keyword</label>
+                            <input type="text" id="search-keyword" placeholder="Search by name, skills, education, company">
+                        </div>
+                        <div class="form-group">
+                            <label for="search-location">Location</label>
+                            <input type="text" id="search-location" placeholder="City, State, Country">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="search-experience">Minimum Experience (years)</label>
+                            <input type="number" id="search-experience" min="0" max="50">
+                        </div>
+                        <div class="form-group">
+                            <label for="search-skills">Skills</label>
+                            <input type="text" id="search-skills" placeholder="JavaScript, Python, etc.">
+                        </div>
+                    </div>
+                    <button onclick="searchCandidates()" class="btn btn-primary">Search</button>
+                </div>
+                <div id="search-results" class="search-results"></div>
+            </div>
+
+            <!-- Bulk Upload Section (Recruiters/Admins) -->
+            <div id="bulk-upload" class="section">
+                <div class="section-header">
+                    <h2>Bulk Upload Candidates</h2>
+                    <p>Upload candidate data from Excel or CSV files</p>
+                </div>
+                <div class="upload-info">
+                    <h3>File Format Requirements:</h3>
+                    <ul>
+                        <li>Supported formats: Excel (.xlsx, .xls) or CSV (.csv)</li>
+                        <li>Required columns: name, email, phone, location, experience_years, skills, education, current_company, expected_salary</li>
+                        <li>Default password for uploaded candidates: "default123"</li>
+                        <li>Verification emails will be sent to all uploaded candidates</li>
+                    </ul>
+                </div>
+                <form id="upload-form" class="form">
+                    <div class="form-group">
+                        <label for="upload-file">Select File</label>
+                        <input type="file" id="upload-file" accept=".xlsx,.xls,.csv" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload Candidates</button>
+                </form>
+                <div id="upload-result" class="upload-result"></div>
+            </div>
+
+            <!-- Users Management Section (Admin only) -->
+            <div id="users" class="section">
+                <div class="section-header">
+                    <h2>Manage Users</h2>
+                    <p>View and manage all user accounts</p>
+                </div>
+                <div class="admin-actions">
+                    <button onclick="showCreateRecruiterModal()" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Create Recruiter
+                    </button>
+                </div>
+                <div id="users-list" class="users-list"></div>
+            </div>
+        </div>
+
+        <!-- Modals -->
+        <div id="modal-overlay" class="modal-overlay" onclick="closeModal()">
+            <div class="modal" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h3 id="modal-title">Modal Title</h3>
+                    <button onclick="closeModal()" class="modal-close">&times;</button>
+                </div>
+                <div id="modal-content" class="modal-content">
+                    <!-- Modal content will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
